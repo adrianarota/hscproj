@@ -1,11 +1,4 @@
 <resources>
     <string name="app_name">PocketCloset</string>
-    <string-array name="type_array">
-        <item>Jackets</item>
-        <item>Bottoms</item>
-        <item>Tops</item>
-        <item>All</item>
-
-    </string-array>
 
 </resources>
