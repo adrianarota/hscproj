@@ -20,12 +20,12 @@
 
     <ImageButton
         android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="86dp"
+        android:layout_height="75dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="138dp"
-        android:layout_marginEnd="72dp"
+        android:layout_marginEnd="31dp"
         app:srcCompat="@android:drawable/ic_menu_gallery"
         tools:layout_editor_absoluteX="286dp"
         tools:layout_editor_absoluteY="252dp" />
@@ -112,4 +112,12 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="107dp" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/imageButton2"
+        android:layout_centerVertical="true"
+        android:text="Camera" />
 </RelativeLayout>

@@ -32,7 +32,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "mydatabase";
+    private static final String DATABASE_NAME = "BazaMeaDeDate";
 
     // Labels table name
     private static final String TABLE_ITEMS = "Items";
@@ -46,49 +46,59 @@ public class DBHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS Items( pictureID VARCHAR, type VARCHAR, location VARCHAR, details VARCHAR);");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS Items( pictureID NUMBER, type VARCHAR, location VARCHAR, details VARCHAR);");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS Locations(location VARCHAR);");
         db.execSQL("CREATE TABLE IF NOT EXISTS Types(type VARCHAR);");
+        db.execSQL("INSERT INTO Items VALUES('"+R.drawable.p3+"', 'Tops', 'Timisoara', 'ZARA');");
+        db.execSQL("INSERT INTO Items VALUES('"+R.drawable.p1+"', 'Dresses', 'Timisoara', 'HM');");
+        db.execSQL("INSERT INTO Items VALUES('"+R.drawable.p2+"', 'Tops', 'Timisoara', '?');");
+        db.execSQL("INSERT INTO Items VALUES('"+R.drawable.p4+"', 'Dresses', 'Timisoara', 'HM');");
+        db.execSQL("INSERT INTO Items VALUES('"+R.drawable.p5+"', 'Tops', 'Timisoara', 'CA');");
+     //   db.execSQL("INSERT INTO Items VALUES('"+R.drawable.p6+"', 'Dresses', 'Timisoara', 'HM');");
+
+        db.execSQL("INSERT INTO Types VALUES('All');");
+        db.execSQL("INSERT INTO Types VALUES('Dresses');");
+        db.execSQL("INSERT INTO Types VALUES('Tops');");
+        db.execSQL("INSERT INTO Locations VALUES('All');");
+        db.execSQL("INSERT INTO Locations VALUES('Timisoara');");
 
     }
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){}
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
+        db.execSQL("DROP TABLE Locations");
+        db.execSQL("DROP TABLE Types");
+        onCreate(db);
+    }
     /**
      * Inserting new lable into lables table
      * */
     public void insertLocation(String loc){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
+       // ContentValues values = new ContentValues();
 
-        db.execSQL("INSERT INTO Locations VALUES('loc');");
+        db.execSQL("INSERT INTO Locations VALUES('"+loc+"');");
         db.close(); // Closing database connection
     }
 
     public void insertType(String type){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-
-        db.execSQL("INSERT INTO Types VALUES('type');");
+        db.execSQL("INSERT INTO Types VALUES('"+type+"');");
         db.close(); // Closing database connection
     }
 
 
-    public void insertItem(String type){
+    public void insertItem(int id, String type, String loc, String details){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-
-        db.execSQL("INSERT INTO ITEMS VALUES('');");
+        db.execSQL("INSERT INTO ITEMS VALUES('"+id+"','"+type+"','"+loc+"','"+details+"');");
         db.close(); // Closing database connection
     }
 
-    /**
-     * Getting all labels
-     * returns list of labels
-     * */
+
     public List<String> getAllLocations(){
         List<String> locations = new ArrayList<String>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -96,9 +106,8 @@ public class DBHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + TABLE_LOCATIONS;
 
 
-
         Cursor cursor = db.rawQuery(selectQuery, null);
-        // looping through all rows and adding to list
+
         if (cursor.moveToFirst()) {
             do {
                 locations.add(cursor.getString(0));
@@ -108,8 +117,6 @@ public class DBHandler extends SQLiteOpenHelper {
         // closing connection
         cursor.close();
         db.close();
-
-        // returning lables
         return locations;
     }
 
@@ -137,6 +144,88 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return items;
     }
+/*
+    public List<String> getAllPicIDs(){
+        List<String> ids = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Select All Query
+        String selectQuery = "SELECT pictureID FROM " + TABLE_ITEMS;
+
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                ids.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        // closing connection
+        cursor.close();
+        db.close();
+
+        // returning lables
+        return ids;
+    }
+    */
+
+    public List<Integer> getAllPicIDs(){
+        List<Integer> ids = new ArrayList<Integer>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Select All Query
+        String selectQuery = "SELECT pictureID FROM " + TABLE_ITEMS;
+
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                ids.add(cursor.getInt(0));
+            } while (cursor.moveToNext());
+        }
+
+        // closing connection
+        cursor.close();
+        db.close();
+
+        // returning lables
+        return ids;
+    }
+
+
+
+    public List<Integer> getAllPicIDsLocType(String Loc, String Type){
+        List<Integer> ids = new ArrayList<Integer>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + TABLE_ITEMS;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+             if(Type=="All"&&Loc=="All") {
+                 if(cursor.getString(1)==Type&&cursor.getString(2)==Loc)
+                     ids.add(cursor.getInt(0));
+             }
+
+                if(Type!="All"&&Loc=="All")
+                {        if(cursor.getString(1)==Type)
+                    ids.add(cursor.getInt(0));}
+                if(Type=="All"&&Loc!="All")
+              {         if(cursor.getString(2)==Loc)
+                  ids.add(cursor.getInt(0));}
+            } while (cursor.moveToNext());
+        }
+
+        // closing connection
+        cursor.close();
+        db.close();
+
+        // returning lables
+        return ids;
+    }
 
     public List<String> getAllTypes(){
         List<String> types = new ArrayList<String>();
@@ -149,6 +238,7 @@ public class DBHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
+
                 types.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
@@ -161,19 +251,30 @@ public class DBHandler extends SQLiteOpenHelper {
         return types;
     }
 
-    public List<Item> getItemsWithCriteria(String criteria){
-        List<Item> items = new ArrayList<Item>();
+    public Item getItem(Integer ID){
+        Item item;
+        String Loc = null;
+        String Type = null;
+        String Details = null;
+
         SQLiteDatabase db = this.getReadableDatabase();
-        Item aux;
+       // Item aux;
         // Select All Query
-        String selectQuery = "SELECT  * FROM Items WHERE " + criteria;
+        String selectQuery = "SELECT  * FROM Items";
 
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
+if(cursor.getInt(0)==ID) {
 
+    Loc = cursor.getString(2);
+
+    Type = cursor.getString(1);
+
+    Details = cursor.getString(3);
+}
                 //     locations.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
@@ -181,11 +282,32 @@ public class DBHandler extends SQLiteOpenHelper {
         // closing connection
         cursor.close();
         db.close();
-
-        return items;
+item= new Item(ID, Type, Loc, Details);
+        return item;
     }
 
+    public void deleteItem(Integer ID){
 
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        db.delete(TABLE_ITEMS, "pictureID"+ "=" + ID, null);
+
+        db.close();
+
+    }
+    public void updateItem(Integer ID, String loc, String type, String det){
+        ContentValues cv = new ContentValues();
+        cv.put("location",loc);
+        cv.put("type",type);
+        cv.put("details",det);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        db.update(TABLE_ITEMS,cv,"pictureID"+ "=" + ID, null);
+
+        db.close();
+
+    }
 
 
 }

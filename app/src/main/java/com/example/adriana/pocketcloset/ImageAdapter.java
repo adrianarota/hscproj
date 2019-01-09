@@ -1,10 +1,14 @@
 package com.example.adriana.pocketcloset;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import static java.security.AccessController.getContext;
 
 public class ImageAdapter extends BaseAdapter {
 
@@ -39,7 +43,9 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageResource(MainActivity.picIds[position]);
+//        Uri uri = Uri.parse(MainActivity.picIds[position]);
+ imageView.setImageResource(MainActivity.picIds[position]);
+       // imageView.setImageURI(uri);
         return imageView;
     }
 
